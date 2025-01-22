@@ -23,7 +23,8 @@ commands := map[string]CommandProc {
     },
 
     "build" = proc(args : []string) -> bool {
-        if len(args) < 2 do return false
+        n_args := len(args)
+        if n_args < 2 do return false
     
         path := args[1]
         if !os.is_file(path) {
@@ -47,13 +48,59 @@ commands := map[string]CommandProc {
         compiler := "g++"
         s_args := ""
 
-        cmd := strings.concatenate({compiler, " ", new_path, " ", s_args}, context.temp_allocator)
+        if n_args > 2 {
+            extra_args := args[2:]
+
+            // Loop through extra arguments
+            for arg in extra_args {
+
+                // Find compiler
+                FLAG_COMPILER :: "-comp="
+                if strings.starts_with(arg, FLAG_COMPILER) {
+                    compiler, _ = strings.replace(
+                        arg, FLAG_COMPILER,
+                        "", 1, context.temp_allocator
+                    )
+                    break
+                }
+
+                s_args, _ = strings.concatenate(
+                    {s_args, " ", arg}, context.temp_allocator
+                )
+            }
+        }
+
+        cmd := strings.concatenate({compiler, " ", new_path, s_args}, context.temp_allocator)
         c_cmd := strings.clone_to_cstring(cmd, context.temp_allocator)
 
         libc.system(c_cmd)
     
         return true
-    }
+    },
+
+    "trans" = proc(args : []string) -> bool {
+        if len(args) < 2 do return false
+    
+        path := args[1]
+        if !os.is_file(path) {
+            fmt.println("Given file doesn't exist!")
+            return false
+        }
+    
+        if !strings.ends_with(path, ".rot") {
+            fmt.println("Invalid file extension!")
+            return false
+        }
+    
+        // Translate file to .robj (c-file)
+        new_path := translate_file(path, context.temp_allocator)
+        if !os.is_file(new_path) {
+            fmt.println(new_path)
+            return false
+        }
+    
+        return true
+    },
 }
 
 main :: proc() {
