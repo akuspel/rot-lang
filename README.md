@@ -113,3 +113,7 @@ int main() {
     rizzup 0;
 }
 ```
+
+## Dependencies
+To compile the compiler, you need the odin compiler from odin-lang.org.
+To use the compiler to its full extent, you need a c / c++ compiler of your choice.
