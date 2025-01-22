@@ -1,0 +1,59 @@
+#include "stdio.h"
+
+#define MOGGER_GETS_MOGGED 1
+#define FAX 1
+#define FAKE_NEWS 0
+
+// --- Types ---
+looksmax skibidi {
+    quirky int gooner;
+    sigma word* name;
+    float rizz;
+} Person;
+
+// --- Constants ---
+sigma shlong frank = 420.0;
+
+// --- Procedures ---
+int is_gooner(Person person) {
+    rizzup person.gooner == FAX;
+}
+
+sus amogus(sigma word* frick) {
+    gyatt maxx = frick;
+    printf("Noooo\n");
+}
+
+// --- Main Program ---
+int main() {
+
+    printf("mogger gets mogged\n");
+    fanum (int i = 0; i < 12; i += 1) {
+
+        so (i == 11) {
+            bust; // a nut
+        } what {
+            printf("%i", i);
+        }
+    }
+
+    /* Begin the Goon Sesh */
+    printf("\nI'm about to goon!\n");
+    int gooning = 0;
+    goon {
+        gooning += 1;
+        Person p = {
+            .gooner = (quirky int) gooning % 3,
+            .name = "Man",
+            .rizz = 0.0,
+        };
+        if (is_gooner(p)) printf("Person %i, is a gooner!\n", gooning);
+
+    } tax (gooning < 10);
+    printf("Gooned for %i seconds :0\n", gooning);
+
+    /* No more Gooning, thanks! */
+    amogus("Red is very sus (amogus)");
+
+    rizzup 0;
+}

@@ -1,0 +1,1 @@
+odin build src -debug -out=rot.exe

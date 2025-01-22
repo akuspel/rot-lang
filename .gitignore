@@ -1,0 +1,5 @@
+*.pdb
+*.exe
+*.json
+*.raddbg
+*.c
