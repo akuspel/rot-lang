@@ -188,10 +188,15 @@ parse_row :: proc(line : string, alloc := context.allocator) -> string {
 
         return preline
     }
+    temp_parse := ""
 
     // Remove single line comments
     no_single_com := strings.split_after(line, TOKEN_COMMENT, alloc)[0]
+    temp_parse = no_single_com
     /* Can't bother multiline comments now, add later! */
+
+    // Loop them with fanum tax
+    temp_parse = fanum_tax(temp_parse, alloc)
 
     // Find strings
     split := strings.split(no_single_com, TOKEN_STRING, alloc)
@@ -216,6 +221,39 @@ parse_row :: proc(line : string, alloc := context.allocator) -> string {
     }
 
     return strings.concatenate(split, alloc)
+}
+
+fanum_tax :: proc(line : string, alloc := context.allocator) -> string {
+    TOKEN_FT :: "fanum tax"
+    TOKEN_LE :: "..="
+    TOKEN_L  :: "..<"
+    if strings.count(line, TOKEN_FT) != 1 do return line
+
+    // Get loop type
+    range_contains := strings.contains(line, TOKEN_LE)
+    range := strings.contains(line, TOKEN_L)
+
+    if !(range_contains ~ range) do return line
+
+    // Split line to parts
+    split, _ := strings.split(line, TOKEN_FT, alloc)
+    pre   := split[0]
+    post  := split[1]
+    token := range ? TOKEN_L : TOKEN_LE
+
+    // Split post part to parts
+    post_split,  _ := strings.split(post, token, alloc)
+    split_left,  _ := strings.split(post_split[0], " ", alloc)
+    split_right, _ := strings.split(post_split[1], " ", alloc)
+    variant  := post_split[0]
+    line_end := post_split[1]
+
+    // Combine into 
+    comparison := range ? "<" : "<="
+    return fmt.tprintf(
+        "%sfor (%s = %s; %s %s %s; %s += 1)%s",
+        post, variant, a, variant, comparison, b, variant, line_end
+    )
 }
 
 
