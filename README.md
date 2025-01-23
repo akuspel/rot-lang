@@ -6,43 +6,45 @@ Wish to make your brainrot infection worse while coding?
 rot-lang is a translated language, which produces C-code from your brainrot.
 The syntax is exactly like c, with the following key words replaced:
 
-- if : so
-- else : what
-
-- for : fanum
-- while : tax
-- do : goon
-- goto : cope
-
-- switch : stream
-- break : bust
-- continue : edge
-- default : noskin
-- case : caseoh
-- return : rizzup
-
-- int : int
-- bool : fact
-- float : float
-- long : shlong
-- short : short
-- double : double
-- enum : enum
-- struct : skibidi
-- union : gang
-- void : sus
-- char : word
-
-- nullptr : wrong
-
-- auto : gyatt
-- unsigned : quirky
-- const : sigma
-- volatile : tweaking
-- inline : core
-- extern : alien
-
-- typedef : looksmax
+| C   | rot-lang |
+| ----- | ----- |
+| if | so |
+| else | what |
+|  |  |
+| for | fanum |
+| while | tax |
+| do | goon |
+| goto | cope |
+|  |  |
+| switch | stream |
+| break | bust |
+| continue | edge |
+| default | noskin |
+| case | caseoh |
+| return | rizzup |
+|  |  |
+| int | int |
+| bool | fact |
+| float | float |
+| long | shlong |
+| short | short |
+| double | double |
+| enum | enum |
+| struct | skibidi |
+| union | gang |
+| void | sus |
+| char | word |
+|  |  |
+| nullptr | wrong |
+|  |  |
+| auto | gyatt |
+| unsigned | quirky |
+| const | sigma |
+| volatile | tweaking |
+| inline | core |
+| extern | alien |
+|  |  |
+| typedef | looksmax |
 
 ## Compiling
 You can choose to compile with the given command line tool, where you can define your own preferred compiler with `rot build path -out=compiler`.
