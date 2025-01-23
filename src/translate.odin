@@ -52,3 +52,15 @@ translate_file :: proc(path : string, alloc := context.allocator) -> string {
     os.close(to)
     return new_path
 }
+
+delete_file :: proc(path : string) {
+
+    // Delete file if available
+    if os.is_file(path) {
+        str_data := make([]u16, 2*len(path))
+        defer delete(str_data)
+
+        utf16.encode_string(str_data, path)
+        win32.DeleteFileW(raw_data(str_data))
+    }
+}

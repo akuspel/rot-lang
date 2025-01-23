@@ -72,8 +72,10 @@ commands := map[string]CommandProc {
 
         cmd := strings.concatenate({compiler, " ", new_path, s_args}, context.temp_allocator)
         c_cmd := strings.clone_to_cstring(cmd, context.temp_allocator)
-
         libc.system(c_cmd)
+
+        // After this has been done, delete the generated c file
+        delete_file(new_path)
     
         return true
     },
