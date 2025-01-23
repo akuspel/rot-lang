@@ -154,6 +154,12 @@ TOKEN_SKIP :: "#"
 TOKENS_ALLOWED :: ""
 
 TOKEN_STRING :: "\""
+TOKEN_IMPORT :: "#include "
+
+TOKEN_ROTFILE :: ".rot\""
+TOKEN_ROTHEADER :: ".rh\""
+TOKEN_CFILE :: ".c\""
+TOKEN_CHEADER :: ".h\""
 
 // --- Variables ---
 @(private="file")
@@ -162,7 +168,26 @@ is_string : bool
 // --- Procedures ---
 parse_row :: proc(line : string, alloc := context.allocator) -> string {
 
-    if strings.contains(line, TOKEN_SKIP) do return line
+    if strings.contains(line, TOKEN_SKIP) {
+        preline := line // preprocessor line
+
+        // Convert .rot to .c and .rh to .h
+        if strings.starts_with(line, TOKEN_IMPORT) {
+            if strings.ends_with(line, TOKEN_ROTFILE) {
+                preline, _ = strings.replace(
+                    preline, TOKEN_ROTFILE,
+                    TOKEN_CFILE, 1, alloc
+                )
+            } else if strings.ends_with(line, TOKEN_ROTHEADER) {
+                preline, _ = strings.replace(
+                    preline, TOKEN_ROTHEADER,
+                    TOKEN_CHEADER, 1, alloc
+                )
+            }
+        }
+
+        return preline
+    }
 
     // Remove single line comments
     no_single_com := strings.split_after(line, TOKEN_COMMENT, alloc)[0]

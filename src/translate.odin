@@ -16,22 +16,11 @@ translate_file :: proc(path : string, alloc := context.allocator) -> string {
     if !succ do return "Error, unable to open source file"
     data := transmute(string)from
 
+    // Delete old file
+    delete_file(new_path)
+
     // Create to file if not existing
-    if !os.is_file(new_path) {
-        str_data := make([]u16, 2*len(new_path))
-        defer delete(str_data)
-
-        utf16.encode_string(str_data, new_path)
-        handle := win32.CreateFileW(
-            raw_data(str_data),
-            win32.GENERIC_ALL,
-            win32.FILE_SHARE_WRITE,
-            nil, win32.OPEN_ALWAYS,
-            0, nil
-        )
-
-        if handle != nil do win32.CloseHandle(handle)
-    }
+    create_file(new_path)
 
     // Open to file
     to, err := os.open(new_path, os.O_WRONLY, 1)
@@ -53,14 +42,40 @@ translate_file :: proc(path : string, alloc := context.allocator) -> string {
     return new_path
 }
 
-delete_file :: proc(path : string) {
+when ODIN_OS == .Windows {
 
-    // Delete file if available
-    if os.is_file(path) {
-        str_data := make([]u16, 2*len(path))
-        defer delete(str_data)
+    create_file :: proc(path : string) {
 
-        utf16.encode_string(str_data, path)
-        win32.DeleteFileW(raw_data(str_data))
+        if !os.is_file(path) {
+            // Convert to WSTR
+            str_data := make([]u16, 2*len(path))
+            defer delete(str_data)
+    
+            utf16.encode_string(str_data, path)
+            handle := win32.CreateFileW(
+                raw_data(str_data),
+                win32.GENERIC_ALL,
+                win32.FILE_SHARE_WRITE,
+                nil, win32.OPEN_ALWAYS,
+                0, nil
+            )
+    
+            if handle != nil do win32.CloseHandle(handle)
+        }
     }
+
+    delete_file :: proc(path : string) {
+    
+        // Delete file if available
+        if os.is_file(path) {
+            // Convert to WSTR
+            str_data := make([]u16, 2*len(path))
+            defer delete(str_data)
+    
+            utf16.encode_string(str_data, path)
+            win32.DeleteFileW(raw_data(str_data))
+        }
+    }
+
+    // TODO: Add support for other operating systems
 }
