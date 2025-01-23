@@ -38,7 +38,7 @@ int main() {
     }
 
     /* Begin the Goon Sesh */
-    printf("\nI'm about to goon!\n");
+    printf("\n\nI'm about to goon!\n");
     int gooning = 0;
     goon {
         gooning += 1;
@@ -50,10 +50,17 @@ int main() {
         if (is_gooner(p)) printf("Person %i, is a gooner!\n", gooning);
 
     } tax (gooning < 10);
-    printf("Gooned for %i seconds :0\n", gooning);
+    printf("Gooned for %i seconds :0\n\n", gooning);
 
     /* No more Gooning, thanks! */
     amogus("Red is very sus (amogus)");
+
+    /* Fanum tax collection */
+    int rom = 10;
+    int i;
+    fanum tax (i; 0..=rom + 1) {
+        printf("fanum tax: %i\n", i);
+    }
 
     rizzup 0;
 }

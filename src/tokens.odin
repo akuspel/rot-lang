@@ -199,7 +199,7 @@ parse_row :: proc(line : string, alloc := context.allocator) -> string {
     temp_parse = fanum_tax(temp_parse, alloc)
 
     // Find strings
-    split := strings.split(no_single_com, TOKEN_STRING, alloc)
+    split := strings.split(temp_parse, TOKEN_STRING, alloc)
     changes := len(split) > 1
 
     if changes do is_string = !is_string // Flip 
@@ -224,10 +224,18 @@ parse_row :: proc(line : string, alloc := context.allocator) -> string {
 }
 
 fanum_tax :: proc(line : string, alloc := context.allocator) -> string {
+    // A fanum tax loop is given with the following format
+    //   fanum tax (variant; range)
+    // where variant is a valid rot type variable
+    // and range is of type
+    //   a..=b | [a, b] or a..<b | [a, b)
+    // The expression gets translated into
+    // fanum (variant = a; variant CMP b; variant += 1)
+
     TOKEN_FT :: "fanum tax"
     TOKEN_LE :: "..="
     TOKEN_L  :: "..<"
-    if strings.count(line, TOKEN_FT) != 1 do return line
+    if !strings.contains(line, TOKEN_FT) do return line
 
     // Get loop type
     range_contains := strings.contains(line, TOKEN_LE)
@@ -242,25 +250,37 @@ fanum_tax :: proc(line : string, alloc := context.allocator) -> string {
     token := range ? TOKEN_L : TOKEN_LE
 
     // Split post part to parts
+    a, b : string
     post_split,  _ := strings.split(post, token, alloc)
-    split_left,  _ := strings.split(post_split[0], " ", alloc)
-    split_right, _ := strings.split(post_split[1], " ", alloc)
-    variant  := post_split[0]
-    line_end := post_split[1]
+    if !strings.contains(post_split[0], "(") do return line // You need brackets!
+    if !strings.contains(post_split[1], ")") do return line // You need brackets!
 
-    // Combine into 
+    // Get 'b' value and line end
+    split_right, _ := strings.split(post_split[1], ")", alloc)
+    b = split_right[0]
+    line_end := split_right[1]
+    
+    // Get variant and 'a' value
+    variant : string
+    if !strings.contains(post_split[0], ";") do return line // You need a semicolon!
+    split_left, _ := strings.split(post_split[0], ";", alloc)
+    a, _ = strings.replace_all(split_left[1], " ", "", alloc)
+    variant, _ = strings.replace(split_left[0], "(", "", 1, alloc)
+    variant = strings.trim_space(variant) // Trim extra spaces
+    varname := strings.split(variant, " ", alloc)[max(strings.count(variant, " "), 0)]
+
+    // Combine into proper expression
     comparison := range ? "<" : "<="
     return fmt.tprintf(
         "%sfor (%s = %s; %s %s %s; %s += 1)%s",
-        post, variant, a, variant, comparison, b, variant, line_end
+        pre, variant, a, varname, comparison, b, varname, line_end
     )
 }
 
 
-key_replace :: proc(line : string, key : KeyWord, alloc := context.allocator) -> (string, bool) {
-
-
-
-
-    return line, false
+is_keyword :: proc(token : string) -> bool {
+    for t in KEYS_ROT {
+        if t == token do return true
+    }
+    return false
 }

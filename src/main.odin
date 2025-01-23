@@ -103,6 +103,14 @@ commands := map[string]CommandProc {
     
         return true
     },
+
+    "fanum_tax" = proc(args : []string) -> bool {
+
+        taxpr := "fanum tax (int i; 0..=10) {"
+        fmt.println(" rot :", taxpr)
+        fmt.println("  c  :", fanum_tax(taxpr))
+        return true
+    } 
 }
 
 main :: proc() {
