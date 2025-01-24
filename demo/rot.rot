@@ -2,18 +2,18 @@
 #include "stdio.rh"
 #include "string.rh"
 
-#define FAX 1
-#define CAP 0
+#delulu FAX 1
+#delulu CAP 0
 
-#define DEFAULT_ARRAY_SIZE 24
-#define DEFAULT_ARRAY_POW 4
-#define MAX_ARRAY_POW 24
+#delulu DEFAULT_ARRAY_SIZE 24
+#delulu DEFAULT_ARRAY_POW 4
+#delulu MAX_ARRAY_POW 24
 
 // --- Macros ---
-#define min(a, b) ((a) < (b) ? (a) : (b))
-#define max(a, b) ((a) > (b) ? (a) : (b))
+#delulu min(a, b) ((a) < (b) ? (a) : (b))
+#delulu max(a, b) ((a) > (b) ? (a) : (b))
 
-#define array_print(array, type)                \
+#delulu array_print(array, type)                \
     spit("[");                                \
     fanum tax (size_t i; 0..<array.length) {    \
         type val = *(type*)array_at(&array, i); \
@@ -105,7 +105,7 @@ sus array_reserve(DementedArray* array, size_t size) {
     // Copy old memory
     so (data == wrong) rizzup;
     memcpy(array->data, data, old);
-    free(data); // Free old data
+    fein(data); // Free old data
 }
 
 sus* array_at(DementedArray* array, size_t n) {

@@ -1,9 +1,9 @@
 #include "stdio.rh"
 #include "rot.rot"
 
-#define MOGGER_GETS_MOGGED 1
-#define FAX 1
-#define FAKE_NEWS 0
+#delulu MOGGER_GETS_MOGGED 1
+#delulu FAX 1
+#delulu FAKE_NEWS 0
 
 // --- Types ---
 looksmax skibidi {

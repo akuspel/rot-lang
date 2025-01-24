@@ -55,6 +55,7 @@ KeyWord :: enum {
     // Common functions
     PRINTF,
     MALLOC,
+    FREE,
 }
 
 // --- Constants ---
@@ -99,6 +100,7 @@ KEYS_C := [KeyWord]string {
 
     .PRINTF = "printf",
     .MALLOC = "malloc",
+    .FREE = "free",
 }
 
 KEYS_ROT := [KeyWord]string {
@@ -142,6 +144,7 @@ KEYS_ROT := [KeyWord]string {
 
     .PRINTF = "spit",
     .MALLOC = "mew",
+    .FREE = "fien",
 }
 
 when ODIN_OS == .Windows {
@@ -171,6 +174,9 @@ TOKEN_ROTHEADER :: ".rh\""
 TOKEN_CFILE :: ".c\""
 TOKEN_CHEADER :: ".h\""
 
+TOKEN_DEFINE :: "#delulu "
+TOKEN_CDEFINE :: "#define "
+
 // --- Variables ---
 @(private="file")
 is_string : bool
@@ -194,6 +200,11 @@ parse_row :: proc(line : string, alloc := context.allocator) -> string {
                     TOKEN_CHEADER, 1, alloc
                 )
             }
+        } else if strings.starts_with(line, TOKEN_DEFINE) {
+            preline, _ = strings.replace(
+                preline, TOKEN_DEFINE,
+                TOKEN_CDEFINE, 1, alloc
+            )
         }
 
         return preline
