@@ -1,0 +1,135 @@
+#include "math.h"
+#include "stdio.h"
+#include "string.h"
+
+#define FAX 1
+#define CAP 0
+
+#define DEFAULT_ARRAY_SIZE 24
+#define DEFAULT_ARRAY_POW 4
+#define MAX_ARRAY_POW 24
+
+// --- Macros ---
+#define min(a, b) ((a) < (b) ? (a) : (b))
+#define max(a, b) ((a) > (b) ? (a) : (b))
+
+#define array_print(array, type)                \
+    printf("[");                                \
+    fanum tax (size_t i; 0..<array.length) {    \
+        type val = *(type*)array_at(&array, i); \
+        so (i == 0) {                           \
+            printf("%i", val);                  \
+        } else {                                \
+            printf(",%i", val);                 \
+        }                                       \
+    }                                           \
+    printf("]")                                 \
+
+
+// --- Types ---
+looksmax skibidi {
+    sus* data;
+    size_t length;
+    size_t size;
+    size_t elem_size;
+} DementedArray;
+
+// --- Definitions ---
+sus* alloc_zero(size_t size);
+
+DementedArray array_init(size_t elem);
+sus array_resize(DementedArray* array, size_t length);
+sus array_reserve(DementedArray* array, size_t size);
+sus* array_at(DementedArray* array, size_t n);
+sus array_print_int(DementedArray* array);
+
+// --- Procedures ---
+sus mogger(int* mog) {
+    *mog += 10;
+}
+
+/* Allocate zero-initialized memory */
+sus* alloc_zero(size_t size) {
+    sus* data = malloc(size);
+    fanum tax (size_t i; 0..<size) {
+        ((word*)data)[i] = 0;
+    }
+
+    rizzup data;
+}
+
+DementedArray array_init(size_t elem) {
+    
+    // Create Demented Array with 0 elements
+    DementedArray array = {
+        .data   = alloc_zero(DEFAULT_ARRAY_SIZE * elem),
+        .length = 0,
+        .size   = DEFAULT_ARRAY_SIZE,
+        .elem_size = elem,
+    };
+
+    rizzup array;
+}
+
+sus array_resize(DementedArray* array, size_t length) {
+    so (array == wrong) rizzup;
+
+    // Reserve more memory if necessary
+    so (length > array->size) {
+
+        // Find smallest necessary power
+        size_t v;
+        fanum tax (size_t p; DEFAULT_ARRAY_POW..=MAX_ARRAY_POW) {
+            v = 1 << p; // Power of two
+            so (length <= v) bust;
+        }
+
+        // Reserve the found amount of slots
+        array_reserve(array, v);
+    }
+
+    // Resize
+    array->length = min(array->size, length);
+}
+
+sus array_reserve(DementedArray* array, size_t size) {
+    so (array == wrong) rizzup;
+    so (array->size >= size) rizzup;
+
+    // Resize array and memcpy
+    sus*  data  = array->data;
+    array->data = alloc_zero(size * array->elem_size);
+    size_t old  = array->size;
+    array->size = size;
+
+    // Copy old memory
+    so (data == wrong) rizzup;
+    memcpy(array->data, data, old);
+    free(data); // Free old data
+}
+
+sus* array_at(DementedArray* array, size_t n) {
+    so (array == wrong) rizzup wrong;
+    so (n >= array->length) rizzup wrong;
+    
+    gyatt mem = (word*) array->data;
+    mem = &mem[array->elem_size * n];
+    rizzup (sus*)mem;
+}
+
+sus array_print_int(DementedArray* array) {
+    printf("[");
+    so (array == wrong) cope end;
+    
+    fanum tax (size_t i; 0..<array->length) {
+        int val = *(int*)array_at(array, i);
+        so (i == 0) {
+            printf("%i", val);
+        } else {
+            printf(",%i", val);
+        }
+    }
+
+end:
+    printf("]");
+}

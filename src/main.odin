@@ -1,5 +1,12 @@
 package rotcom
 
+/* --- RotCom rot-lang Compiler ---
+ * This is the main file for the Rot Language compiler
+ * Where the main program and functions are defined.
+ * 
+ * Commands exist here too, but might be moved in the future.
+ */
+
 import "core:os"
 import "core:fmt"
 import "core:strings"
@@ -32,50 +39,59 @@ commands := map[string]CommandProc {
             return false
         }
     
-        if !strings.ends_with(path, ".rot") {
+        if strings.ends_with(path, ".rot") {
+    
+            // Translate file to .robj (c-file)
+            new_path := translate_file(path, context.temp_allocator)
+            if !os.is_file(new_path) {
+                fmt.println(new_path)
+                return false
+            }
+
+            // Compile with given compiler
+            compiler := "g++"
+            s_args := ""
+
+            if n_args > 2 {
+                extra_args := args[2:]
+
+                // Loop through extra arguments
+                for arg in extra_args {
+
+                    // Find compiler
+                    FLAG_COMPILER :: "-comp="
+                    if strings.starts_with(arg, FLAG_COMPILER) {
+                        compiler, _ = strings.replace(
+                            arg, FLAG_COMPILER,
+                            "", 1, context.temp_allocator
+                        )
+                        break
+                    }
+
+                    s_args, _ = strings.concatenate(
+                        {s_args, " ", arg}, context.temp_allocator
+                    )
+                }
+            }
+
+            cmd := strings.concatenate({compiler, " ", new_path, s_args}, context.temp_allocator)
+            c_cmd := strings.clone_to_cstring(cmd, context.temp_allocator)
+            libc.system(c_cmd)
+
+            // After this has been done, delete the generated c file
+            delete_file(new_path)
+
+        } else if strings.ends_with(path, ".rb") {
+            
+            // Run build file
+            if !build_file(path) {
+                return false
+            }
+            
+        } else {
             fmt.println("Invalid file extension!")
             return false
         }
-    
-        // Translate file to .robj (c-file)
-        new_path := translate_file(path, context.temp_allocator)
-        if !os.is_file(new_path) {
-            fmt.println(new_path)
-            return false
-        }
-
-        // Compile with given compiler
-        compiler := "g++"
-        s_args := ""
-
-        if n_args > 2 {
-            extra_args := args[2:]
-
-            // Loop through extra arguments
-            for arg in extra_args {
-
-                // Find compiler
-                FLAG_COMPILER :: "-comp="
-                if strings.starts_with(arg, FLAG_COMPILER) {
-                    compiler, _ = strings.replace(
-                        arg, FLAG_COMPILER,
-                        "", 1, context.temp_allocator
-                    )
-                    break
-                }
-
-                s_args, _ = strings.concatenate(
-                    {s_args, " ", arg}, context.temp_allocator
-                )
-            }
-        }
-
-        cmd := strings.concatenate({compiler, " ", new_path, s_args}, context.temp_allocator)
-        c_cmd := strings.clone_to_cstring(cmd, context.temp_allocator)
-        libc.system(c_cmd)
-
-        // After this has been done, delete the generated c file
-        delete_file(new_path)
     
         return true
     },

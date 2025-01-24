@@ -1,5 +1,10 @@
 package rotcom
 
+/* --- Rot Language Translator ---
+ * In this file you can find procedures, which are
+ * Used for file translation and management
+ */
+
 import "core:os"
 import "core:strings"
 import win32 "core:sys/windows"
@@ -9,7 +14,7 @@ import "core:unicode/utf16"
 // --- Procedures ---
 translate_file :: proc(path : string, alloc := context.allocator) -> string {
 
-    new_path := strings.concatenate({strings.trim_right(path, ".rot"), ".c"}, alloc)
+    new_path, _ := strings.replace(path, ".rot", ".c", 1, alloc)
 
     // Open files (Use own temp allocator for this proc, since the data only needs to life so long)
     from, succ := os.read_entire_file_from_filename(path, context.temp_allocator)

@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include "rot.rot"
 
 #define MOGGER_GETS_MOGGED 1
 #define FAX 1
@@ -57,10 +58,18 @@ int main() {
 
     /* Fanum tax collection */
     int rom = 10;
-    int i;
-    fanum tax (i; 0..=rom + 1) {
-        printf("fanum tax: %i\n", i);
+    fanum tax (int i; 0..=rom + 1) {
+        int x = i;
+        mogger(&x);
+        printf("fanum tax: %i | %i\n", i, x);
     }
+    printf("\n");
+
+    /* Demented Array! */
+    gyatt arr = array_init(sizeof(int));
+    array_resize(&arr, 10);
+    *(int*)array_at(&arr, 4) = 5;
+    array_print(arr, int);
 
     rizzup 0;
 }

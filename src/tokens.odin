@@ -1,8 +1,9 @@
 package rotcom
 
-/* --- Rot Language Compiler Token definitions ---
- * 
- *
+/* --- Rot Language Compiler Tokens ---
+ * In this file you can find the definitions for
+ * Various rot-lang / c tokens, as well as parsing
+ * Procedures utilizing those tokens.
  */
 
 import "core:fmt"
@@ -267,7 +268,7 @@ fanum_tax :: proc(line : string, alloc := context.allocator) -> string {
     a, _ = strings.replace_all(split_left[1], " ", "", alloc)
     variant, _ = strings.replace(split_left[0], "(", "", 1, alloc)
     variant = strings.trim_space(variant) // Trim extra spaces
-    varname := strings.split(variant, " ", alloc)[max(strings.count(variant, " "), 0)]
+    varname := strings.split(variant, " ", alloc)[strings.count(variant, " ")]
 
     // Combine into proper expression
     comparison := range ? "<" : "<="
