@@ -73,6 +73,9 @@ Beneath is an example from `demo/demo.rb`:
 .trans rot.rot
 .build demo.rot -o skibidi.exe
 ```
+Note: if you include other rot files, you should translate those *before* calling `.build main.rot`. Under normal circumstances, there should only be a single build command, and all translate commands should come before that!
+
+Translating rot header files (.rh) is not yet supported, but is planned to be added soon™.
 
 ## Example
 A simple example using rot-lang, which can also be found in `demo/demo.rot`. Following the addition of a build system, the demo must now be built with `rot build demo.rb`.
