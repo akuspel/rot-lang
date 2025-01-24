@@ -50,8 +50,11 @@ KeyWord :: enum {
     INLINE,
     EXTERN,
 
-    TYPEDEF
+    TYPEDEF,
 
+    // Common functions
+    PRINTF,
+    MALLOC,
 }
 
 // --- Constants ---
@@ -93,6 +96,9 @@ KEYS_C := [KeyWord]string {
     .EXTERN = "extern",
 
     .TYPEDEF = "typedef",
+
+    .PRINTF = "printf",
+    .MALLOC = "malloc",
 }
 
 KEYS_ROT := [KeyWord]string {
@@ -133,6 +139,9 @@ KEYS_ROT := [KeyWord]string {
     .EXTERN = "alien",
 
     .TYPEDEF = "looksmax",
+
+    .PRINTF = "spit",
+    .MALLOC = "mew",
 }
 
 when ODIN_OS == .Windows {

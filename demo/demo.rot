@@ -1,4 +1,4 @@
-#include "stdio.h"
+#include "stdio.rh"
 #include "rot.rot"
 
 #define MOGGER_GETS_MOGGED 1
@@ -22,24 +22,24 @@ int is_gooner(Person person) {
 
 sus amogus(sigma word* frick) {
     gyatt maxx = frick;
-    printf("Nooooes\n");
+    spit("Nooooes\n");
 }
 
 // --- Main Program ---
 int main() {
 
-    printf("mogger gets mogged\n");
+    spit("mogger gets mogged\n");
     fanum (int i = 0; i < 12; i += 1) {
 
         so (i == 11) {
             bust; // a nut
         } what {
-            printf("%i", i);
+            spit("%i", i);
         }
     }
 
     /* Begin the Goon Sesh */
-    printf("\n\nI'm about to goon!\n");
+    spit("\n\nI'm about to goon!\n");
     int gooning = 0;
     goon {
         gooning += 1;
@@ -48,10 +48,10 @@ int main() {
             .name = "Man",
             .rizz = 0.0,
         };
-        if (is_gooner(p)) printf("Person %i, is a gooner!\n", gooning);
+        if (is_gooner(p)) spit("Person %i, is a gooner!\n", gooning);
 
     } tax (gooning < 10);
-    printf("Gooned for %i seconds :0\n\n", gooning);
+    spit("Gooned for %i seconds :0\n\n", gooning);
 
     /* No more Gooning, thanks! */
     amogus("Red is very sus (amogus)");
@@ -61,9 +61,9 @@ int main() {
     fanum tax (int i; 0..=rom + 1) {
         int x = i;
         mogger(&x);
-        printf("fanum tax: %i | %i\n", i, x);
+        spit("fanum tax: %i | %i\n", i, x);
     }
-    printf("\n");
+    spit("\n");
 
     /* Demented Array! */
     gyatt arr = array_init(sizeof(int));

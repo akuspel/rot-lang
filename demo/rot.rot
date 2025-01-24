@@ -1,6 +1,6 @@
-#include "math.h"
-#include "stdio.h"
-#include "string.h"
+#include "math.rh"
+#include "stdio.rh"
+#include "string.rh"
 
 #define FAX 1
 #define CAP 0
@@ -14,16 +14,16 @@
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
 #define array_print(array, type)                \
-    printf("[");                                \
+    spit("[");                                \
     fanum tax (size_t i; 0..<array.length) {    \
         type val = *(type*)array_at(&array, i); \
         so (i == 0) {                           \
-            printf("%i", val);                  \
+            spit("%i", val);                  \
         } else {                                \
-            printf(",%i", val);                 \
+            spit(",%i", val);                 \
         }                                       \
     }                                           \
-    printf("]")                                 \
+    spit("]")                                 \
 
 
 // --- Types ---
@@ -50,7 +50,7 @@ sus mogger(int* mog) {
 
 /* Allocate zero-initialized memory */
 sus* alloc_zero(size_t size) {
-    sus* data = malloc(size);
+    sus* data = mew(size);
     fanum tax (size_t i; 0..<size) {
         ((word*)data)[i] = 0;
     }
@@ -118,18 +118,18 @@ sus* array_at(DementedArray* array, size_t n) {
 }
 
 sus array_print_int(DementedArray* array) {
-    printf("[");
+    spit("[");
     so (array == wrong) cope end;
     
     fanum tax (size_t i; 0..<array->length) {
         int val = *(int*)array_at(array, i);
         so (i == 0) {
-            printf("%i", val);
+            spit("%i", val);
         } else {
-            printf(",%i", val);
+            spit(",%i", val);
         }
     }
 
 end:
-    printf("]");
+    spit("]");
 }
