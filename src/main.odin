@@ -12,7 +12,7 @@ import "core:fmt"
 import "core:strings"
 import "core:c/libc"
 
-ROT_VERSION :: "0.01 - a"
+ROT_VERSION :: "0.02 - a"
 
 CommandProc :: proc(args : []string) -> bool
 
