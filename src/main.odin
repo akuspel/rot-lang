@@ -40,6 +40,8 @@ commands := map[string]CommandProc {
         }
     
         if strings.ends_with(path, ".rot") {
+
+            keep := false // Keep files after building
     
             // Translate file to .robj (c-file)
             new_path := translate_file(path, context.temp_allocator)
@@ -47,6 +49,10 @@ commands := map[string]CommandProc {
                 fmt.println(new_path)
                 return false
             }
+            head_path := translate_file_to_header(
+                path,
+                context.temp_allocator
+            )
 
             // Compile with given compiler
             compiler := "g++"
@@ -60,12 +66,17 @@ commands := map[string]CommandProc {
 
                     // Find compiler
                     FLAG_COMPILER :: "-comp="
+                    FLAG_KEEP :: "-keep"
                     if strings.starts_with(arg, FLAG_COMPILER) {
                         compiler, _ = strings.replace(
                             arg, FLAG_COMPILER,
                             "", 1, context.temp_allocator
                         )
-                        break
+                        continue
+
+                    } else if arg == FLAG_KEEP {
+                        keep = true
+                        continue
                     }
 
                     s_args, _ = strings.concatenate(
@@ -75,11 +86,15 @@ commands := map[string]CommandProc {
             }
 
             cmd := strings.concatenate({compiler, " ", new_path, s_args}, context.temp_allocator)
+            if !strings.starts_with(cmd, "rot ") do cmd, _ = strings.replace_all(cmd, ".rot", ".c", context.temp_allocator)
             c_cmd := strings.clone_to_cstring(cmd, context.temp_allocator)
             libc.system(c_cmd)
 
             // After this has been done, delete the generated c file
-            delete_file(new_path)
+            if !keep {
+                delete_file(new_path)
+                delete_file(head_path)
+            }
 
         } else if strings.ends_with(path, ".rb") {
             
@@ -116,6 +131,10 @@ commands := map[string]CommandProc {
             fmt.println(new_path)
             return false
         }
+        head_path := translate_file_to_header(
+            path,
+            context.temp_allocator
+        )
     
         return true
     },

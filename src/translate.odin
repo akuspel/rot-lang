@@ -47,6 +47,46 @@ translate_file :: proc(path : string, alloc := context.allocator) -> string {
     return new_path
 }
 
+translate_file_to_header :: proc(path : string, alloc := context.allocator) -> string {
+
+    head_path, _ := strings.replace(path, ".rot", ".h", 1, alloc)
+
+    // Open files (Use own temp allocator for this proc, since the data only needs to life so long)
+    from, succ := os.read_entire_file_from_filename(path, context.temp_allocator)
+    if !succ do return "Error, unable to open source file"
+    data := transmute(string)from
+
+    if !strings.contains(data, TOKEN_EXPORT) do return ""
+
+    // Delete old file
+    delete_file(head_path)
+
+    // Create to file if not existing
+    create_file(head_path)
+
+    // Open to file
+    to, err := os.open(head_path, os.O_WRONLY, 1)
+    if err != nil do return "Error, unable to write to destination file"
+
+    // Split data to lines, loop through them all
+    lines := strings.split(data, TOKEN_NEWLINE)
+    for l in lines {
+        parsed := parse_row_export(l, context.temp_allocator)
+        if parsed == "" do continue
+
+        line := strings.concatenate(
+            {parsed, "\n"},
+            context.temp_allocator
+        )
+
+        // Write parsed lines to new file
+        os.write_string(to, line)
+    }
+
+    os.close(to)
+    return head_path
+}
+
 when ODIN_OS == .Windows {
 
     create_file :: proc(path : string) {

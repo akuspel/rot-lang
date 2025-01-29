@@ -12,6 +12,7 @@ import "core:strings"
 
 // --- Types ---
 KeyWord :: enum {
+    ELIF,
     IF,
     ELSE,
 
@@ -60,6 +61,7 @@ KeyWord :: enum {
 
 // --- Constants ---
 KEYS_C := [KeyWord]string {
+    .ELIF = "else if",
     .IF = "if",
     .ELSE = "else",
 
@@ -104,6 +106,7 @@ KEYS_C := [KeyWord]string {
 }
 
 KEYS_ROT := [KeyWord]string {
+    .ELIF = "so what",
     .IF = "so",
     .ELSE = "what",
 
@@ -177,6 +180,8 @@ TOKEN_CHEADER :: ".h\""
 TOKEN_DEFINE :: "#delulu "
 TOKEN_CDEFINE :: "#define "
 
+TOKEN_EXPORT :: "#*" // Exporting line to header file
+
 // --- Variables ---
 @(private="file")
 is_string : bool
@@ -184,23 +189,28 @@ is_string : bool
 // --- Procedures ---
 parse_row :: proc(line : string, alloc := context.allocator) -> string {
 
-    if strings.contains(line, TOKEN_SKIP) {
-        preline := line // preprocessor line
+    // Remove header export tokens
+    temp_parse := line
+    temp_parse, _ = strings.replace_all(temp_parse, TOKEN_EXPORT, "", alloc)
+    temp_parse = strings.trim_right_space(temp_parse)
+
+    if strings.contains(temp_parse, TOKEN_SKIP) {
+        preline := temp_parse // preprocessor line
 
         // Convert .rot to .c and .rh to .h
-        if strings.starts_with(line, TOKEN_IMPORT) {
-            if strings.ends_with(line, TOKEN_ROTFILE) {
+        if strings.starts_with(temp_parse, TOKEN_IMPORT) {
+            if strings.ends_with(temp_parse, TOKEN_ROTFILE) {
                 preline, _ = strings.replace(
                     preline, TOKEN_ROTFILE,
                     TOKEN_CFILE, 1, alloc
                 )
-            } else if strings.ends_with(line, TOKEN_ROTHEADER) {
+            } else if strings.ends_with(temp_parse, TOKEN_ROTHEADER) {
                 preline, _ = strings.replace(
                     preline, TOKEN_ROTHEADER,
                     TOKEN_CHEADER, 1, alloc
                 )
             }
-        } else if strings.starts_with(line, TOKEN_DEFINE) {
+        } else if strings.starts_with(temp_parse, TOKEN_DEFINE) {
             preline, _ = strings.replace(
                 preline, TOKEN_DEFINE,
                 TOKEN_CDEFINE, 1, alloc
@@ -209,10 +219,9 @@ parse_row :: proc(line : string, alloc := context.allocator) -> string {
 
         return preline
     }
-    temp_parse := ""
 
     // Remove single line comments
-    no_single_com := strings.split_after(line, TOKEN_COMMENT, alloc)[0]
+    no_single_com := strings.split_after(temp_parse, TOKEN_COMMENT, alloc)[0]
     temp_parse = no_single_com
     /* Can't bother multiline comments now, add later! */
 
@@ -242,6 +251,24 @@ parse_row :: proc(line : string, alloc := context.allocator) -> string {
     }
 
     return strings.concatenate(split, alloc)
+}
+
+parse_row_export :: proc(line : string, alloc := context.allocator) -> string {
+
+    if strings.count(line, TOKEN_EXPORT) == 0 do return ""
+
+    // Split line based on input, add semicolon
+    split, _ := strings.split(line, TOKEN_EXPORT, alloc)
+    trimmed := strings.trim_space(split[0])
+    fine, _ := strings.concatenate({trimmed, ";"}, alloc)
+
+    parsed := (
+        strings.starts_with(fine, TOKEN_SKIP) ||
+        strings.ends_with(trimmed, "{") ||
+        strings.ends_with(trimmed, ";")) ? trimmed : fine
+
+    // Return result
+    return parse_row(parsed, alloc)
 }
 
 fanum_tax :: proc(line : string, alloc := context.allocator) -> string {
